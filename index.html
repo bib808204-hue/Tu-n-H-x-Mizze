@@ -407,6 +407,25 @@
     font-size: 12px;
     cursor: pointer;
   }
+
+  /* MUSIC BUTTON */
+  .music-btn {
+    position: fixed;
+    right: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: #111;
+    border: 1px solid #3a3a3a;
+    color: var(--silver-bright);
+    font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 150;
+    box-shadow: 0 0 18px rgba(200,200,200,0.12);
+  }
+  .music-btn.playing { animation: spin 4s linear infinite; border-color: #888; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -639,6 +658,19 @@ function showToast(msg) {
 document.getElementById('admin-pass').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
 
 renderShop();
+</script>
+
+<script>
+(function(){
+  const audio = new Audio('music.mp3');
+  audio.loop = true;
+  audio.volume = 0.5;
+  function play(){ if (audio.paused) audio.play().catch(function(){}); }
+  // Trình duyệt chặn tự phát, nên phát ở lần chạm đầu tiên và tự phát lại nếu bị dừng
+  document.addEventListener('pointerdown', play);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) play(); });
+  audio.addEventListener('pause', function(){ setTimeout(play, 300); });
+})();
 </script>
 </body>
 </html>
